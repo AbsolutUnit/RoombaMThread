@@ -3,6 +3,7 @@
 // #include "AlgorithmCommon/MyAlgorithm.h"
 #include "../Common/AlgorithmRegistrar.h"
 #include <dlfcn.h>
+#include <unistd.h>
 
 using AlgorithmPtr = std::unique_ptr<AlgorithmRegistrar>;
 
@@ -12,6 +13,14 @@ int main(int argc, char **argv)
 
     // TODO: Create the simulator, move the code loading the algorithms into simulator class, 
     //       make sure you load all algorithms in the proper folder and not only two.
+
+    // parse arguments
+
+    // int opt;
+    // static struct option long_options[] = {
+
+    // };
+    // while ((opt = getopt_long(argc, argv)))
 
     // Load algorithm library
     void *algorithm_handle1 = dlopen("Algorithm_1_123456789/libAlgorithm_1_123456789.so", RTLD_LAZY);
