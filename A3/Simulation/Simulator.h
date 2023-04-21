@@ -14,7 +14,6 @@
 // You may want to add additional classes for simulation but you should have a Simulator class.
 // You can use the below suggestion or alternatively implement concrete class for each sensor.
 class Simulator : public WallsSensor, public DirtSensor, public BatteryMeter {
-    std::size_t maxSteps = 0;
     std::size_t batteryState, maxBattery = 0;
     std::string outputFile = "";
     bool displayFlag = true;
@@ -29,6 +28,8 @@ public:
     Simulator(const std::string &housePath, const std::string &algoPath, bool display)
     {
         readHouses(housePath);
+        loadAlgorithms(algoPath);
+        displayFlag = display;
 
     };
 
@@ -41,7 +42,7 @@ public:
 private:
     void setAlgorithm(AbstractAlgorithm &algorithm) {
         currAlgo = &algorithm;
-        currAlgo->setMaxSteps(maxSteps);
+        currAlgo->setMaxSteps(currHouse->getMaxSteps());
         currAlgo->setWallsSensor(*this);
         currAlgo->setDirtSensor(*this);
         currAlgo->setBatteryMeter(*this);
@@ -58,41 +59,30 @@ private:
     std::size_t getBatteryState() const override {};
 
     void readHouses(const std::string &housePath) {
-        // loop through folder and call readHouseFile per .house
-        // pushBack to vector of houses
+        // Loop through folder
+        // Dlopen each so file
+        // Handle errors if there
+
+        // Recommendation: Make this a helper function
+        // THIS THIS THIS THIS
+        // For auto algo in AlgorithmRegistrar::getAlgorithmRegistrar()
+        // Get algo via algo.create()
+        // Pushback to vector of algorithms
+        // THIS THIS THIS THIS
+
+        // Dlclose each algo file
+        // Options are call per iteration of folder loop
+        // Or do loop for folder, loop for pushback algo, loop for folder again dlclosing
     };
 
     House readHouseFile(const std::string &houseFilePath);
 
     void loadAlgorithms(const std::string &algoPath) {
-        // loop through folder and dlopen each .so file
-        // pushBack to vector of algorithms
+        // loop through folder and call readHouse on each file
+        // Thats it
     };
-
-    int convertToCoordinates(Point p) const;
-
-    void handleMove(Step s, int location);
 
     void displayMap(int iterations) const;
 
     void generateOutputFile();
 };
-
-// #pragma once
-
-// #include <string>
-// #include "../Common/AbstractAlgorithm.h"
-
-// // You may want to add additional classes for simulation but you should have a Simulator class.
-// // You can use the below suggestion or alternatively implement concrete class for each sensor.
-// class Simulator : public WallsSensor, public DirtSensor, public BatteryMeter {
-
-// public:
-
-
-
-
-
-
-
-// };

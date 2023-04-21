@@ -152,6 +152,7 @@ void Simulator::loadAlgorithms(const std::string &algoPath) {
     // Here, pointer will be destructed, but object itself will not be
 }
 
+// NEEDS TO BE HANDLED, OUTPUT FILE NAME CHANGES PER PERMUTATION
 void Simulator::generateOutputFile() {
     // Set outputstream
     std::ofstream output;
@@ -204,6 +205,17 @@ int Simulator::dirtLevel() const {
 std::size_t Simulator::getBatteryState() const {
     // Simple return for battery
     return batteryState;
+}
+
+void Simulator::run() {
+    for (auto &algorithm : algorithms) {
+        for (auto &house : houses) {
+            setAlgorithm(algorithm);
+            setHouse(house);
+            runPair();
+            // CSV Output stuff if needed
+        }
+    }
 }
 
 void Simulator::runPair() {
