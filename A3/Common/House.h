@@ -105,5 +105,9 @@ public:
         std::cout << "Robot Position Within House: (" << position.x << ", " << position.y << ")" << std::endl;
     }
 
+    const std::string getName() {
+        return houseName;
+    }
+
     ~House(){};
 };

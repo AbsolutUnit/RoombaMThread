@@ -28,7 +28,7 @@ House Simulator::readHouseFile(const std::string &houseFileMap, const std::strin
         return !s.empty() && std::all_of(s.begin(), s.end(), ::isdigit);
     };
 
-    std::string outputFileName = houseFileMap;
+    std::string outputFileName = houseFileMap;      // TODO: MUST FIX, OUTPUT FILE NAME CHANGES PER PERMUTATION
     size_t pos = outputFileName.find_last_of(".");
     if (pos != std::string::npos && outputFileName.substr(pos) == ".house") {
         outputFileName.replace(pos, 4, "Output.txt");
@@ -141,16 +141,14 @@ House Simulator::readHouseFile(const std::string &houseFileMap, const std::strin
     }
 
     // Communicate data to variables within Simulator
-    outputFile = outputFileName;
+    outputFile = outputFileName;        // TODO: FIX SO OUTPUTFILENAME IS SET PER PERMUTATION USING ALGO
     maxBattery = simulation_information[1];
     batteryState = maxBattery;
     return House(dirt_level, simulation_information[2], simulation_information[3], docking_location, docking_location, map, houseName);
 }
 
 void Simulator::loadAlgorithms(const std::string &algoPath) {
-    
 
-    // Here, pointer will be destructed, but object itself will not be
 }
 
 // NEEDS TO BE HANDLED, OUTPUT FILE NAME CHANGES PER PERMUTATION
@@ -213,6 +211,7 @@ void Simulator::run() {
         for (auto &house : houses) {
             setAlgorithm(algorithm);
             setHouse(house);
+            // TODO: SET OUTPUT FILE NAME BASED ON VECTOR OF ALGORITHMNAMES AND house.getName()
             runPair();
             // CSV Output stuff if needed
         }
