@@ -21,6 +21,7 @@ class Simulator : public WallsSensor, public DirtSensor, public BatteryMeter {
     std::vector<char> movesTaken;
     std::vector<House> houses;
     std::vector<AbstractAlgorithm> algorithms;
+    std::vector<std::string> algorithmNames;
     AbstractAlgorithm *currAlgo;
     House *currHouse;
 public:
@@ -62,6 +63,7 @@ private:
         // Loop through folder
         // Dlopen each so file
         // Handle errors if there
+        // Add algorithm name via pushback
 
         // Recommendation: Make this a helper function
         // THIS THIS THIS THIS
@@ -75,10 +77,11 @@ private:
         // Or do loop for folder, loop for pushback algo, loop for folder again dlclosing
     };
 
-    House readHouseFile(const std::string &houseFilePath);
+    House readHouseFile(const std::string &houseFilePath, const std::string &houseName);
 
     void loadAlgorithms(const std::string &algoPath) {
         // loop through folder and call readHouse on each file
+        // Remember to grab name since readHouseFile now takes in name
         // Thats it
     };
 

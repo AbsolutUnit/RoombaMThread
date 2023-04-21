@@ -20,7 +20,7 @@ const char WALL = 'W';
 const int number_of_fields = 5; // name, max battery, max steps, num rows, num cols
 const std::vector<std::string> data_names = {"MaxSteps", "MaxBattery", "Rows", "Cols"};
 
-House Simulator::readHouseFile(const std::string &houseFileMap) {
+House Simulator::readHouseFile(const std::string &houseFileMap, const std::string &houseName) {
 
     // Lambda to check if a string is a number
     auto isNumber = [](std::string &s) {
@@ -144,6 +144,7 @@ House Simulator::readHouseFile(const std::string &houseFileMap) {
     outputFile = outputFileName;
     maxBattery = simulation_information[1];
     batteryState = maxBattery;
+    return House(dirt_level, simulation_information[2], simulation_information[3], docking_location, docking_location, map, houseName);
 }
 
 void Simulator::loadAlgorithms(const std::string &algoPath) {

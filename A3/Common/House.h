@@ -11,8 +11,9 @@ class House {
     Point position = {-1, -1};
     Point dockLocation = {-1, -1};
     std::vector<char> houseMap;
+    const std::string houseName;
 public:
-    House(int totalDirt, int numRows, int numCols, Point position, Point dockLocation, std::vector<char> &houseMap): totalDirt(totalDirt), numRows(numRows), numCols(numCols), position(position), dockLocation(dockLocation), houseMap(houseMap) {};
+    House(int totalDirt, int numRows, int numCols, Point position, Point dockLocation, std::vector<char> &houseMap, const std::string &houseName): totalDirt(totalDirt), numRows(numRows), numCols(numCols), position(position), dockLocation(dockLocation), houseMap(houseMap), houseName(houseName) {};
 
     bool isWall(Direction d) {
         std::vector<Point> directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
