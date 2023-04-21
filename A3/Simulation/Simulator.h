@@ -60,6 +60,15 @@ private:
     std::size_t getBatteryState() const override {};
 
     void readHouses(const std::string &housePath) {
+        // loop through folder and call readHouse on each file
+        // Remember to grab name since readHouseFile now takes in name
+        // Thats it
+    };
+
+    House readHouseFile(const std::string &houseFilePath, const std::string &houseName);
+
+    void loadAlgorithms(const std::string &algoPath) {
+
         // Loop through folder
         // Dlopen each so file
         // Handle errors if there
@@ -75,14 +84,7 @@ private:
         // Dlclose each algo file
         // Options are call per iteration of folder loop
         // Or do loop for folder, loop for pushback algo, loop for folder again dlclosing
-    };
-
-    House readHouseFile(const std::string &houseFilePath, const std::string &houseName);
-
-    void loadAlgorithms(const std::string &algoPath) {
-        // loop through folder and call readHouse on each file
-        // Remember to grab name since readHouseFile now takes in name
-        // Thats it
+        
     };
 
     void displayMap(int iterations) const;
