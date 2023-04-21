@@ -1,5 +1,5 @@
 #pragma once
-
+// TODO: THIS IS A LONG FILE, MAYBE IMPLEMENT LARGER METHODS IN CPP
 #include <vector>
 #include "../Common/common_types.h"
 #include "../Common/common_structs.h"
