@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/anookabara/Desktop/assignment3-112710107/A3/Simulation
+CMAKE_SOURCE_DIR = /home/anookabara/Desktop/assignment3-112710107/A3
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/anookabara/Desktop/assignment3-112710107/A3/Simulation
+CMAKE_BINARY_DIR = /home/anookabara/Desktop/assignment3-112710107/A3
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,14 +87,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/anookabara/Desktop/assignment3-112710107/A3/Simulation/CMakeFiles /home/anookabara/Desktop/assignment3-112710107/A3/Simulation//CMakeFiles/progress.marks
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/anookabara/Desktop/assignment3-112710107/A3/Simulation/CMakeFiles 0
+	cd /home/anookabara/Desktop/assignment3-112710107/A3 && $(CMAKE_COMMAND) -E cmake_progress_start /home/anookabara/Desktop/assignment3-112710107/A3/CMakeFiles /home/anookabara/Desktop/assignment3-112710107/A3/Simulation//CMakeFiles/progress.marks
+	cd /home/anookabara/Desktop/assignment3-112710107/A3 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Simulation/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/anookabara/Desktop/assignment3-112710107/A3/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 clean
+	cd /home/anookabara/Desktop/assignment3-112710107/A3 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Simulation/clean
 .PHONY : clean
 
 # The main clean target
@@ -103,30 +103,31 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 preinstall
+	cd /home/anookabara/Desktop/assignment3-112710107/A3 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Simulation/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 preinstall
+	cd /home/anookabara/Desktop/assignment3-112710107/A3 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Simulation/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/anookabara/Desktop/assignment3-112710107/A3 && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
-#=============================================================================
-# Target rules for targets named Simulation
+# Convenience name for target.
+Simulation/CMakeFiles/Simulation.dir/rule:
+	cd /home/anookabara/Desktop/assignment3-112710107/A3 && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Simulation/CMakeFiles/Simulation.dir/rule
+.PHONY : Simulation/CMakeFiles/Simulation.dir/rule
 
-# Build rule for target.
-Simulation: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Simulation
+# Convenience name for target.
+Simulation: Simulation/CMakeFiles/Simulation.dir/rule
 .PHONY : Simulation
 
 # fast build rule for target.
 Simulation/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Simulation.dir/build.make CMakeFiles/Simulation.dir/build
+	cd /home/anookabara/Desktop/assignment3-112710107/A3 && $(MAKE) $(MAKESILENT) -f Simulation/CMakeFiles/Simulation.dir/build.make Simulation/CMakeFiles/Simulation.dir/build
 .PHONY : Simulation/fast
 
 AlgorithmRegistrar.o: AlgorithmRegistrar.cpp.o
@@ -134,7 +135,7 @@ AlgorithmRegistrar.o: AlgorithmRegistrar.cpp.o
 
 # target to build an object file
 AlgorithmRegistrar.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Simulation.dir/build.make CMakeFiles/Simulation.dir/AlgorithmRegistrar.cpp.o
+	cd /home/anookabara/Desktop/assignment3-112710107/A3 && $(MAKE) $(MAKESILENT) -f Simulation/CMakeFiles/Simulation.dir/build.make Simulation/CMakeFiles/Simulation.dir/AlgorithmRegistrar.cpp.o
 .PHONY : AlgorithmRegistrar.cpp.o
 
 AlgorithmRegistrar.i: AlgorithmRegistrar.cpp.i
@@ -142,7 +143,7 @@ AlgorithmRegistrar.i: AlgorithmRegistrar.cpp.i
 
 # target to preprocess a source file
 AlgorithmRegistrar.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Simulation.dir/build.make CMakeFiles/Simulation.dir/AlgorithmRegistrar.cpp.i
+	cd /home/anookabara/Desktop/assignment3-112710107/A3 && $(MAKE) $(MAKESILENT) -f Simulation/CMakeFiles/Simulation.dir/build.make Simulation/CMakeFiles/Simulation.dir/AlgorithmRegistrar.cpp.i
 .PHONY : AlgorithmRegistrar.cpp.i
 
 AlgorithmRegistrar.s: AlgorithmRegistrar.cpp.s
@@ -150,7 +151,7 @@ AlgorithmRegistrar.s: AlgorithmRegistrar.cpp.s
 
 # target to generate assembly for a file
 AlgorithmRegistrar.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Simulation.dir/build.make CMakeFiles/Simulation.dir/AlgorithmRegistrar.cpp.s
+	cd /home/anookabara/Desktop/assignment3-112710107/A3 && $(MAKE) $(MAKESILENT) -f Simulation/CMakeFiles/Simulation.dir/build.make Simulation/CMakeFiles/Simulation.dir/AlgorithmRegistrar.cpp.s
 .PHONY : AlgorithmRegistrar.cpp.s
 
 main.o: main.cpp.o
@@ -158,7 +159,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Simulation.dir/build.make CMakeFiles/Simulation.dir/main.cpp.o
+	cd /home/anookabara/Desktop/assignment3-112710107/A3 && $(MAKE) $(MAKESILENT) -f Simulation/CMakeFiles/Simulation.dir/build.make Simulation/CMakeFiles/Simulation.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -166,7 +167,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Simulation.dir/build.make CMakeFiles/Simulation.dir/main.cpp.i
+	cd /home/anookabara/Desktop/assignment3-112710107/A3 && $(MAKE) $(MAKESILENT) -f Simulation/CMakeFiles/Simulation.dir/build.make Simulation/CMakeFiles/Simulation.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -174,7 +175,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Simulation.dir/build.make CMakeFiles/Simulation.dir/main.cpp.s
+	cd /home/anookabara/Desktop/assignment3-112710107/A3 && $(MAKE) $(MAKESILENT) -f Simulation/CMakeFiles/Simulation.dir/build.make Simulation/CMakeFiles/Simulation.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 # Help Target
@@ -203,6 +204,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/anookabara/Desktop/assignment3-112710107/A3 && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

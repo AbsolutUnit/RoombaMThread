@@ -44,7 +44,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/anookabara/Desktop/assignment3-112710107/A3/Algorithm_1_123456789/cmake_install.cmake")
+  include("/home/anookabara/Desktop/assignment3-112710107/A3/Algorithm_1_112628028/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
