@@ -3,7 +3,7 @@
 //
 
 #include "../AlgorithmCommon/AlgorithmRegistration.h"
-#include "include/Algo_987654321.h"
+#include "include/Algo_112710107.h"
 
 
-REGISTER_ALGORITHM(Algo_987654321);
+REGISTER_ALGORITHM(Algo_112710107);

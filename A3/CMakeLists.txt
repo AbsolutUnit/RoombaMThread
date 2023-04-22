@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
 add_subdirectory(Algorithm_1_112628028)
-add_subdirectory(Algorithm_2_123456789)
+add_subdirectory(Algorithm_2_112710107)
 add_subdirectory(Simulation)
 
-set(common_libs Algorithm_1_112628028 Algorithm_2_123456789)
+set(common_libs Algorithm_1_112628028 Algorithm_2_112710107)

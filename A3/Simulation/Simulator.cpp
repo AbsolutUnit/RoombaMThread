@@ -148,7 +148,7 @@ House Simulator::readHouseFile(const std::string &houseFileMap, const std::strin
 }
 
 void Simulator::loadAlgorithms(const std::string &algoPath) {
-
+    
 }
 
 // NEEDS TO BE HANDLED, OUTPUT FILE NAME CHANGES PER PERMUTATION
