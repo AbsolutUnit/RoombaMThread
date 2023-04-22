@@ -1,0 +1,11 @@
+A3/*.cmake
+A3/Makefile
+A3/CMakeFiles
+A3/CMakeCache.txt
+A3/Algorithm_1_112628028/*.cmake
+A3/Algorithm_1_112628028/Makefile
+A3/Algorithm_1_112628028/CMakeFiles
+A3/Algorithm_2_112710107/*.cmake
+A3/Algorithm_2_112710107/Makefile
+A3/Algorithm_2_112710107/CMakeFiles
+.vscode
