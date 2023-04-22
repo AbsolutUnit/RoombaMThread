@@ -8,4 +8,9 @@ A3/Algorithm_1_112628028/CMakeFiles
 A3/Algorithm_2_112710107/*.cmake
 A3/Algorithm_2_112710107/Makefile
 A3/Algorithm_2_112710107/CMakeFiles
+A3/Simulation/*.cmake
+A3/Simulation/Makefile
+A3/Simulation/CMakeFiles
+A3/Simulation/CMakeCache.txt
+A3/TestCases
 .vscode
