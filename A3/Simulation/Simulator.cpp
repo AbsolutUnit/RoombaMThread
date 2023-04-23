@@ -78,7 +78,7 @@ House Simulator::readHouseFile(const std::string &houseFileMap, const std::strin
         }
         // A line contains more than 3 tokens,
         // or the first token does not match expected, and second token is not a number
-        if (line_info.size() != 2 || data_names[i] != line_info[0] 
+        if (line_info.size() != 2 || data_names[i - 1] != line_info[0] 
             || !isNumber(line_info[1])) {
             inf.close();
             throw std::runtime_error("Input file is not formatted correctly.");
