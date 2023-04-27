@@ -9,6 +9,8 @@
 #include <dlfcn.h>
 #include <map>
 #include <regex>
+#include <filesystem>
+#include "../Common/AlgorithmRegistrar.h"
 
 // Character to represent the Dock
 const char DOCK = 'D';
@@ -147,8 +149,28 @@ House Simulator::readHouseFile(const std::string &houseFileMap, const std::strin
     return House(dirt_level, simulation_information[2], simulation_information[3], docking_location, docking_location, map, houseName);
 }
 
+void Simulator::readHouses(const std::string &housePath) {
+    for (const auto &entry : std::filesystem::directory_iterator(housePath)) {
+        std::filesystem::path path = entry.path();
+        if (path.string().substr(path.string().find_last_of(".") + 1) == "house") {
+            houses.push_back(readHouseFile(path.string(), path.stem()));
+        }
+    }
+}
+
 void Simulator::loadAlgorithms(const std::string &algoPath) {
-    
+    for (const auto &entry : std::filesystem::directory_iterator(algoPath)) {
+        std::string path = entry.path().string();
+        std::string base_filename = path.substr(path.find_last_of("/\\") + 1);
+        if(dlopen(path.c_str(), RTLD_LAZY)) // add algo name to vector
+            algorithmNames.push_back(base_filename);
+    }
+
+    for(const auto& algo: AlgorithmRegistrar::getAlgorithmRegistrar()) {
+        auto algorithm = algo.create();
+        algorithms.push_back(std::move(algorithm));
+    }
+
 }
 
 // NEEDS TO BE HANDLED, OUTPUT FILE NAME CHANGES PER PERMUTATION
@@ -209,7 +231,7 @@ std::size_t Simulator::getBatteryState() const {
 void Simulator::run() {
     for (auto &algorithm : algorithms) {
         for (auto &house : houses) {
-            setAlgorithm(algorithm);
+            setAlgorithm(*algorithm);
             setHouse(house);
             // TODO: SET OUTPUT FILE NAME BASED ON VECTOR OF ALGORITHMNAMES AND house.getName()
             runPair();

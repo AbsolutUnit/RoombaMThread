@@ -20,7 +20,7 @@ class Simulator : public WallsSensor, public DirtSensor, public BatteryMeter {
     float partialCharge = 0;
     std::vector<char> movesTaken;
     std::vector<House> houses;
-    std::vector<AbstractAlgorithm> algorithms;
+    std::vector<std::unique_ptr<AbstractAlgorithm>> algorithms;
     std::vector<std::string> algorithmNames;
     AbstractAlgorithm *currAlgo;
     House *currHouse;
