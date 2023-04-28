@@ -6,14 +6,30 @@
 
 #include <vector>
 #include <string>
+#include <memory>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <cmath>
+#include <vector>
+#include <algorithm>
+#include <dlfcn.h>
+#include <map>
+#include <regex>
+#include <filesystem>
+
 #include "../Common/House.h"
 #include "../Common/AbstractAlgorithm.h"
 #include "../Common/common_types.h"
 #include "../Common/common_structs.h"
+#include "../Common/AlgorithmRegistrar.h"
+
 
 // You may want to add additional classes for simulation but you should have a Simulator class.
 // You can use the below suggestion or alternatively implement concrete class for each sensor.
 class Simulator : public WallsSensor, public DirtSensor, public BatteryMeter {
+public:
     std::size_t batteryState, maxBattery = 0;
     std::string outputFile = "";
     bool displayFlag = true;
@@ -22,10 +38,10 @@ class Simulator : public WallsSensor, public DirtSensor, public BatteryMeter {
     std::vector<House> houses;
     std::vector<std::unique_ptr<AbstractAlgorithm>> algorithms;
     std::vector<std::string> algorithmNames;
+    std::vector<void*> algorithmHandlers;
     AbstractAlgorithm *currAlgo;
     House *currHouse;
-public:
-
+// public:
     Simulator(const std::string &housePath, const std::string &algoPath, bool display)
     {
         readHouses(housePath);
@@ -34,11 +50,16 @@ public:
 
     };
 
-    void run(){};
+    void run();
 
-    void runPair(){};
+    void runPair();
 
-    ~Simulator(){};
+    ~Simulator(){
+        for (auto&& algos : algorithms) {
+            algos.reset();
+        }
+        unloadAlgorithms();
+    };
 
 private:
     void setAlgorithm(AbstractAlgorithm &algorithm) {
@@ -53,21 +74,20 @@ private:
         currHouse = &house;
     }
 
-    bool isWall(Direction d) const override {};
+    bool isWall(Direction d) const override;
 
-    int dirtLevel() const override {};
+    int dirtLevel() const override;
 
-    std::size_t getBatteryState() const override {};
+    std::size_t getBatteryState() const override;
 
-    void readHouses(const std::string &housePath) {
+    void readHouses(const std::string &housePath);
         // loop through folder and call readHouse on each file
         // Remember to grab name since readHouseFile now takes in name
         // Thats it
-    };
 
     House readHouseFile(const std::string &houseFilePath, const std::string &houseName);
 
-    void loadAlgorithms(const std::string &algoPath) {
+    void loadAlgorithms(const std::string &algoPath);
 
         // Loop through folder
         // Dlopen each so file
@@ -85,7 +105,8 @@ private:
         // Options are call per iteration of folder loop
         // Or do loop for folder, loop for pushback algo, loop for folder again dlclosing
         
-    };
+
+    void unloadAlgorithms();
 
     void displayMap(int iterations) const;
 

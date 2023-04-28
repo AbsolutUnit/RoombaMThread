@@ -5,6 +5,7 @@
 #include "../Common/common_structs.h"
 
 class House {
+public:
     int totalDirt = 0;
     std::size_t maxSteps = 0;
     int numRows, numCols = 0;
@@ -12,7 +13,7 @@ class House {
     Point dockLocation = {-1, -1};
     std::vector<char> houseMap;
     const std::string houseName;
-public:
+// public:
     House(int totalDirt, int numRows, int numCols, Point position, Point dockLocation, std::vector<char> &houseMap, const std::string &houseName): totalDirt(totalDirt), numRows(numRows), numCols(numCols), position(position), dockLocation(dockLocation), houseMap(houseMap), houseName(houseName) {};
 
     bool isWall(Direction d) {

@@ -22,3 +22,9 @@ struct PointHash {
 };
 
 enum class Status {FINISHED, WORKING, DEAD};
+
+// Character to represent the Dock
+const char DOCK = 'D';
+
+// Character to represent a Wall
+const char WALL = 'W';

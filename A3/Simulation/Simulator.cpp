@@ -1,22 +1,4 @@
-#include "Simulator.h"
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <cmath>
-#include <vector>
-#include <algorithm>
-#include <dlfcn.h>
-#include <map>
-#include <regex>
-#include <filesystem>
-#include "../Common/AlgorithmRegistrar.h"
-
-// Character to represent the Dock
-const char DOCK = 'D';
-
-// Character to represent a Wall
-const char WALL = 'W';
+#include "../Common/Simulator.h"
 
 // Number of fields contained in the input file, excluding the map
 const int number_of_fields = 5; // name, max battery, max steps, num rows, num cols
@@ -56,7 +38,7 @@ House Simulator::readHouseFile(const std::string &houseFileMap, const std::strin
         input.erase(input.size() - 1);
     while (inf) { // While buffer is not EOF
         tokens.push_back(std::regex_replace(input, std::regex("="), " = ")); //replace all '=' with " = " for easy delimitation
-        tokens.push_back(input);
+        // tokens.push_back(input);
         std::getline(inf, input);
         if (input[input.size() - 1] == '\r')
             input.erase(input.size() - 1);
@@ -161,9 +143,12 @@ void Simulator::readHouses(const std::string &housePath) {
 void Simulator::loadAlgorithms(const std::string &algoPath) {
     for (const auto &entry : std::filesystem::directory_iterator(algoPath)) {
         std::string path = entry.path().string();
-        std::string base_filename = path.substr(path.find_last_of("/\\") + 1);
-        if(dlopen(path.c_str(), RTLD_LAZY)) // add algo name to vector
-            algorithmNames.push_back(base_filename);
+        std::string baseFilename = path.substr(path.find_last_of("/\\") + 1);
+        void *algoHandler;
+        if(algoHandler = dlopen(path.c_str(), RTLD_LAZY)){
+            algorithmNames.push_back(baseFilename);
+            algorithmHandlers.push_back(algoHandler);
+        } 
     }
 
     for(const auto& algo: AlgorithmRegistrar::getAlgorithmRegistrar()) {
@@ -172,6 +157,19 @@ void Simulator::loadAlgorithms(const std::string &algoPath) {
     }
 
 }
+
+void Simulator::unloadAlgorithms() {
+    AlgorithmRegistrar::getAlgorithmRegistrar().clear();
+    for (auto&& handler : algorithmHandlers) {
+        if(dlclose(handler)) {
+            // Did not dlclose properly
+        }
+    }
+    // algorithmNames.clear();
+    // algorithmHandlers.clear();
+    // algorithms.clear();
+}
+
 
 // NEEDS TO BE HANDLED, OUTPUT FILE NAME CHANGES PER PERMUTATION
 void Simulator::generateOutputFile() {
