@@ -143,12 +143,17 @@ void Simulator::readHouses(const std::string &housePath) {
 void Simulator::loadAlgorithms(const std::string &algoPath) {
     for (const auto &entry : std::filesystem::directory_iterator(algoPath)) {
         std::string path = entry.path().string();
-        std::string baseFilename = path.substr(path.find_last_of("/\\") + 1);
+        std::string baseFilename = entry.path().stem().string().substr(entry.path().stem().string().find_last_of("/\\") + 1);
         void *algoHandler;
-        if(algoHandler = dlopen(path.c_str(), RTLD_LAZY)){
-            algorithmNames.push_back(baseFilename);
-            algorithmHandlers.push_back(algoHandler);
+        if (entry.path().extension().string() != ".so") {
+            continue;
+        }
+        if (!(algoHandler = dlopen(path.c_str(), RTLD_LAZY))){
+            std::cerr << "Error loading algorithm library: " << dlerror() << std::endl;
+            continue;
         } 
+        algorithmNames.push_back(baseFilename);
+        algorithmHandlers.push_back(algoHandler);
     }
 
     for(const auto& algo: AlgorithmRegistrar::getAlgorithmRegistrar()) {
@@ -159,15 +164,12 @@ void Simulator::loadAlgorithms(const std::string &algoPath) {
 }
 
 void Simulator::unloadAlgorithms() {
-    AlgorithmRegistrar::getAlgorithmRegistrar().clear();
     for (auto&& handler : algorithmHandlers) {
+    AlgorithmRegistrar::getAlgorithmRegistrar().clear();
         if(dlclose(handler)) {
-            // Did not dlclose properly
+            // error undloading
         }
     }
-    // algorithmNames.clear();
-    // algorithmHandlers.clear();
-    // algorithms.clear();
 }
 
 

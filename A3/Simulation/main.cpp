@@ -67,11 +67,22 @@ int main(int argc, char **argv)
         std::cout << x.houseName << std::endl;
     }
 
+    std::cout << "algos" << std::endl;
     for (auto x: simulator.algorithmNames) {
         std::cout << x << std::endl;
     }
 
+
+    
     std::cout << "UNLOAD" << std::endl;
+
+    // TODO: TEST CSV CODE
+
+    // TODO: PERFORM SCORE CALCULATION AND STORE, TO USE IN GENERATE OUTPUT FILES AND GENERATE SUMMARY FUNCTIONS
+
+    // TODO: OUTPUT NAMING CONVENTION IN GENERATE OUTPUT FILES ALGO-HOUSE.TXT
+    
+    // TODO: RUNPAIR CALLS GENERATE OUTPUTFILE (RUNS 1 SIMULATION START TO FINISH)-> CALLED BY RUN()
 
     // // Load algorithm library
     // void *algorithm_handle1 = dlopen("Algorithm_1_123456789/libAlgorithm_1_123456789.so", RTLD_LAZY);
