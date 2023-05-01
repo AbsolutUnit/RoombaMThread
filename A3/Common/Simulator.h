@@ -39,6 +39,7 @@ public:
     std::vector<std::unique_ptr<AbstractAlgorithm>> algorithms;
     std::vector<std::string> algorithmNames;
     std::vector<void*> algorithmHandlers;
+    std::vector<int> scores;
     AbstractAlgorithm *currAlgo;
     House *currHouse;
 // public:
@@ -47,7 +48,7 @@ public:
         readHouses(housePath);
         loadAlgorithms(algoPath);
         displayFlag = display;
-
+        scores = std::vector<int>(houses.size() * algorithms.size());
     };
 
     void run();
@@ -108,7 +109,11 @@ private:
 
     void unloadAlgorithms();
 
+    int calculateScore(Status status);
+
     void displayMap(int iterations) const;
 
     void generateOutputFile();
+
+    void generateSummary() const;
 };

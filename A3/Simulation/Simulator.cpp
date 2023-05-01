@@ -172,6 +172,14 @@ void Simulator::unloadAlgorithms() {
     }
 }
 
+int Simulator::calculateScore(Status status) {
+    if (status == Status::DEAD)
+        return currHouse->getMaxSteps() + currHouse->getTotalDirt() * 300 + 2000; // Dead
+    if (status == Status::FINISHED && !currHouse->isDocked()) 
+        return currHouse->getMaxSteps() + currHouse->getTotalDirt() * 300 + 3000; // Finished not on dock
+
+    return movesTaken.size() + currHouse->getTotalDirt() * 300 + (currHouse->isDocked() ? 0: 1000); // Otherwise 
+}
 
 // NEEDS TO BE HANDLED, OUTPUT FILE NAME CHANGES PER PERMUTATION
 void Simulator::generateOutputFile() {
@@ -180,27 +188,27 @@ void Simulator::generateOutputFile() {
     // Open file for ostream
     output.open(outputFile);
 
+    
     int score = 0;
     // Grab status
-    std::string status = "";
+    Status status;
+    std::vector<std::string> statuses = {"FINISHED", "WORKING", "DEAD"};
+
     if (currHouse->isDocked()) {
-        status = "FINISHED";
-        score = currHouse->getMaxSteps() + currHouse->getTotalDirt() * 300 + 3000;
+        status = Status::FINISHED;
     } else {
         if (batteryState == 0) {
-            status = "DEAD";
-            score = currHouse->getMaxSteps() + currHouse->getTotalDirt() * 300 + 2000;
+            status = Status::DEAD;
         } else {
-            status = "WORKING";
-            score = movesTaken.size() + currHouse->getTotalDirt() * 300 + (currHouse->isDocked() ? 0: 1000);
+            status = Status::WORKING;
         }
     }
-
+    score = calculateScore(status);
 
     // Convert data to string format and insert 
     output << "NumSteps = " << movesTaken.size() << std::endl;
     output << "DirtLeft = " << currHouse->getTotalDirt() << std::endl;
-    output << "Status = " << status << std::endl;
+    output << "Status = " << statuses[static_cast<int>(status)] << std::endl;
     output << "inDock = " << currHouse->isDocked() << std::endl;
     output << "Score = " << score << std::endl;
     output << "Steps:" << std::endl;
@@ -210,6 +218,28 @@ void Simulator::generateOutputFile() {
     }
 
     // close file
+    output.close();
+}
+
+
+void Simulator::generateSummary() const {
+    std::ofstream output;
+    output.open("summary.csv");
+
+    // first row corresponding to algo names
+    output << "," << "Algorithms,";
+    for (auto x : algorithmNames) {
+        output << x << ",";
+    }
+    output << '\n';
+
+    for (int i = 0; i < algorithmNames.size(); ++i) {
+        output << algorithmNames[i] << ',';
+        for (int j = 0 j < houses.size(); ++j) {
+            output << scores[i*houses.size() + j] << ',';
+        }
+        output << '\n';
+    }
     output.close();
 }
 
