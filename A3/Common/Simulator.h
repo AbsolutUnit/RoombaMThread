@@ -18,6 +18,7 @@
 #include <map>
 #include <regex>
 #include <filesystem>
+#include <thread>
 
 #include "../Common/House.h"
 #include "../Common/AbstractAlgorithm.h"
@@ -33,13 +34,15 @@ public:
     std::size_t batteryState, maxBattery = 0;
     std::string outputFile = "";
     bool displayFlag = true;
+    bool summaryOnly = false;
     float partialCharge = 0;
     std::vector<char> movesTaken;
     std::vector<House> houses;
     std::vector<std::unique_ptr<AbstractAlgorithm>> algorithms;
+    std::map<std::string, std::unique_ptr<AbstractAlgorithm>> nameToAlgorithm;
     std::vector<std::string> algorithmNames;
     std::vector<void*> algorithmHandlers;
-    std::vector<int> scores;
+    std::unordered_map<std::string, int> scores;
     AbstractAlgorithm *currAlgo;
     House *currHouse;
 // public:
@@ -48,12 +51,11 @@ public:
         readHouses(housePath);
         loadAlgorithms(algoPath);
         displayFlag = display;
-        scores = std::vector<int>(houses.size() * algorithms.size());
     };
 
     void run();
 
-    void runPair();
+    int runPair();
 
     ~Simulator(){
         for (auto&& algos : algorithms) {
@@ -113,7 +115,7 @@ private:
 
     void displayMap(int iterations) const;
 
-    void generateOutputFile();
+    int generateOutputFile();
 
     void generateSummary() const;
 };

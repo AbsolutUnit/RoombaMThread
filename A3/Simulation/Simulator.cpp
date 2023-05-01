@@ -17,7 +17,9 @@ House Simulator::readHouseFile(const std::string &houseFileMap, const std::strin
     if (pos != std::string::npos && outputFileName.substr(pos) == ".house") {
         outputFileName.replace(pos, 4, "Output.txt");
     } else {
-        throw std::runtime_error("Invalid file format " + houseFileMap + ". Must be file with extension '.house'");
+        std::ofstream err{houseFileMap + ".error"};
+        err << "Invalid file format " + houseFileMap + ". Must be file with extension '.house'.\n";
+        err.close();
     }
 
     // Read file as input file stream inf
@@ -25,8 +27,9 @@ House Simulator::readHouseFile(const std::string &houseFileMap, const std::strin
 
     // File could not be opened
     if (!inf) {
-        inf.close();
-        throw std::runtime_error("Couldn't open " + houseFileMap + " for reading.\n");
+        std::ofstream err{houseFileMap + ".error"};
+        err << "Couldn't open " + houseFileMap + " for reading.\n";
+        err.close();
     }
   
     std::vector<std::string> tokens;
@@ -46,7 +49,9 @@ House Simulator::readHouseFile(const std::string &houseFileMap, const std::strin
     
     // File contains fewer than than does not contain map
     if (tokens.size() < number_of_fields) { 
-        throw std::runtime_error("Input file does not contain a map.");
+        std::ofstream err{houseFileMap + ".error"};
+        err << "Input file does not contain a map.\n";
+        err.close();
     }
 
     std::vector<int> simulation_information; // max_steps, max_battery, num rows, num cols
@@ -65,7 +70,9 @@ House Simulator::readHouseFile(const std::string &houseFileMap, const std::strin
         if (line_info.size() != 2 || data_names[i - 1] != line_info[0] 
             || !isNumber(line_info[1])) {
             inf.close();
-            throw std::runtime_error("Input file is not formatted correctly.");
+            std::ofstream err{houseFileMap + ".error"};
+            err << "Input file is not formatted correctly.";
+            err.close();
         }
         simulation_information.push_back(std::stoi(line_info[1]));
         line_info.clear();
@@ -89,7 +96,9 @@ House Simulator::readHouseFile(const std::string &houseFileMap, const std::strin
             // Set location of dock
             if (tokens[i + number_of_fields][j] == DOCK) {
                 if (dockFound) {
-                    throw std::runtime_error("Map contains two docks!");
+                    std::ofstream err{houseFileMap + ".error"};
+                    err << "Map contains two docks!";
+                    err.close();
                 }
                 docking_location.y = i;
                 docking_location.x = j;
@@ -113,7 +122,9 @@ House Simulator::readHouseFile(const std::string &houseFileMap, const std::strin
 
     if (!dockFound) {
         // Throw error if no dock is there
-        throw std::runtime_error("Dock is missing!");
+        std::ofstream err{houseFileMap + ".error"};
+        err << "Dock is missing!";
+        err.close();
     }
 
     // Pad extra rows below, if the counted number of rows is less than Rows
@@ -141,24 +152,29 @@ void Simulator::readHouses(const std::string &housePath) {
 }
 
 void Simulator::loadAlgorithms(const std::string &algoPath) {
+    // Iterate through all files in the directory given by algoPath
     for (const auto &entry : std::filesystem::directory_iterator(algoPath)) {
         std::string path = entry.path().string();
         std::string baseFilename = entry.path().stem().string().substr(entry.path().stem().string().find_last_of("/\\") + 1);
         void *algoHandler;
-        if (entry.path().extension().string() != ".so") {
+        if (entry.path().extension().string() != ".so") { // If the current file is not a .so file skip
             continue;
         }
-        if (!(algoHandler = dlopen(path.c_str(), RTLD_LAZY))){
-            std::cerr << "Error loading algorithm library: " << dlerror() << std::endl;
+        if (!(algoHandler = dlopen(path.c_str(), RTLD_LAZY))){ // If failure to dlopen .so file, write to error file
+            std::ofstream err{baseFilename + ".error"};
+            err << "Error loading algorithm library: " << dlerror() << std::endl;
+            err.close();
             continue;
         } 
-        algorithmNames.push_back(baseFilename);
         algorithmHandlers.push_back(algoHandler);
     }
 
-    for(const auto& algo: AlgorithmRegistrar::getAlgorithmRegistrar()) {
+    std::cout << "in loadalgorithms()" << std::endl;
+    for(const auto& algo: AlgorithmRegistrar::getAlgorithmRegistrar()) {    // Get algorithm pointers and populate data structures
         auto algorithm = algo.create();
-        algorithms.push_back(std::move(algorithm));
+        algorithmNames.push_back(algo.name());
+        nameToAlgorithm[algo.name()] = std::move(algorithm);
+        // algorithms.push_back(std::move(algorithm));
     }
 
 }
@@ -182,14 +198,21 @@ int Simulator::calculateScore(Status status) {
 }
 
 // NEEDS TO BE HANDLED, OUTPUT FILE NAME CHANGES PER PERMUTATION
-void Simulator::generateOutputFile() {
+int Simulator::generateOutputFile() {
     // Set outputstream
     std::ofstream output;
-    // Open file for ostream
-    output.open(outputFile);
 
+    // Finds the name of a given algorithm pointer
+    auto findName = std::find_if(std::begin(nameToAlgorithm), 
+        std::end(nameToAlgorithm), [&](const std::pair<const std::string, std::unique_ptr<AbstractAlgorithm>> &pair){
+        return pair.second.get() == currAlgo;
+    });
     
-    int score = 0;
+    std::string algoname = "Algorithm";
+    if (findName == nameToAlgorithm.end()) {
+        algoname = findName->first;
+    }
+
     // Grab status
     Status status;
     std::vector<std::string> statuses = {"FINISHED", "WORKING", "DEAD"};
@@ -203,22 +226,28 @@ void Simulator::generateOutputFile() {
             status = Status::WORKING;
         }
     }
-    score = calculateScore(status);
+    int score = calculateScore(status);
 
-    // Convert data to string format and insert 
-    output << "NumSteps = " << movesTaken.size() << std::endl;
-    output << "DirtLeft = " << currHouse->getTotalDirt() << std::endl;
-    output << "Status = " << statuses[static_cast<int>(status)] << std::endl;
-    output << "inDock = " << currHouse->isDocked() << std::endl;
-    output << "Score = " << score << std::endl;
-    output << "Steps:" << std::endl;
-    // Take moves in loop
-    for (auto i : movesTaken) {
-        output << i;
-    }
+    if (!summaryOnly){
+        // Open file for ostream
+        output.open(currHouse->getName() + "-" + algoname + ".txt");
+        // Convert data to string format and insert 
+        output << "NumSteps = " << movesTaken.size() << std::endl;
+        output << "DirtLeft = " << currHouse->getTotalDirt() << std::endl;
+        output << "Status = " << statuses[static_cast<int>(status)] << std::endl;
+        output << "inDock = " << currHouse->isDocked() << std::endl;
+        output << "Score = " << score << std::endl;
+        output << "Steps:" << std::endl;
+        // Take moves in loop
+        for (auto i : movesTaken) {
+            output << i;
+        }
 
     // close file
     output.close();
+    }
+
+    return score;
 }
 
 
@@ -235,8 +264,9 @@ void Simulator::generateSummary() const {
 
     for (int i = 0; i < algorithmNames.size(); ++i) {
         output << algorithmNames[i] << ',';
-        for (int j = 0 j < houses.size(); ++j) {
-            output << scores[i*houses.size() + j] << ',';
+        for (int j = 0; j < houses.size(); ++j) {
+            std::string x = houses[j].houseName + "-" + algorithmNames[i];
+            output << scores.at(x) << ',';
         }
         output << '\n';
     }
@@ -270,7 +300,7 @@ void Simulator::run() {
     }
 }
 
-void Simulator::runPair() {
+int Simulator::runPair() {
 
     std::vector<char> stepToChar = {'N', 'E', 'S', 'W', 's', 'F'};
     
@@ -314,8 +344,8 @@ void Simulator::runPair() {
         // Iterate iterations
         ++iterations;
     }
-    
-    generateOutputFile();
+    // TODO: for summary, return score?
+    return generateOutputFile();
 }
 
 void Simulator::displayMap(int x) const {
