@@ -15,3 +15,8 @@ A3/Simulation/CMakeCache.txt
 A3/TestCases
 A3/houses
 .vscode
+A3/debug.sh
+A3/run.sh
+*.txt
+*.csv
+vgcore.*

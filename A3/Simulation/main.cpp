@@ -28,13 +28,14 @@ int main(int argc, char **argv)
         {"num_threads",     optional_argument, 0, 't'},
         {"display",         no_argument,       0, 'd'},
         {"summary_only",    no_argument,       0, 's'},
+        {"logging",         no_argument,       0, 'l'},
         {0,                 0,                 0,  0}
     };
 
     std::string house_path, algo_path;
     int num_threads;
-    bool summary_only, display;
-    summary_only = display = false;
+    bool summary_only, display, logging;
+    summary_only = display = logging = false;
     house_path = algo_path = std::filesystem::current_path();
 
     while ((opt = getopt_long_only(argc, argv, short_options, long_options, &option_index)) != -1) {
@@ -49,9 +50,13 @@ int main(int argc, char **argv)
                 num_threads = atoi(optarg);
                 break;
             case 'd':
-                
+                display = true;
+                break;
             case 's':
                 summary_only = true;
+                break;
+            case 'l':
+                logging = true;
                 break;
         }
     }
@@ -59,10 +64,10 @@ int main(int argc, char **argv)
     std::cout << "house path: " << house_path << std::endl;
     std::cout << "algo path: " << algo_path << std::endl;
 
-    Simulator simulator(house_path, algo_path, display);
+    Simulator simulator(house_path, algo_path, display, summary_only);
 
     std::cout << "MADE SIMULATOR" << std::endl;
-    // TODO: SIMULATOR IS NOT GETTING ALL INFO. CHECK!!! GDB NOT SEEING SIMULATOR.CPP
+
     for (auto x : simulator.houses) {
         std::cout << x.houseName << std::endl;
     }
@@ -72,11 +77,12 @@ int main(int argc, char **argv)
         std::cout << x << std::endl;
     }
 
+    simulator.run();
 
-    
+    // Algo_112710107
+    // Algo_112628028
+
     std::cout << "UNLOAD" << std::endl;
-
-    // TODO: TEST CSV CODE
 
     // TODO: PERFORM SCORE CALCULATION AND STORE, TO USE IN GENERATE OUTPUT FILES AND GENERATE SUMMARY FUNCTIONS
 

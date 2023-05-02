@@ -7,6 +7,7 @@
 class House {
 public:
     int totalDirt = 0;
+    int maxBattery = 0;
     std::size_t maxSteps = 0;
     int numRows, numCols = 0;
     Point position = {-1, -1};
@@ -14,7 +15,30 @@ public:
     std::vector<char> houseMap;
     const std::string houseName;
 // public:
-    House(int totalDirt, int numRows, int numCols, Point position, Point dockLocation, std::vector<char> &houseMap, const std::string &houseName): totalDirt(totalDirt), numRows(numRows), numCols(numCols), position(position), dockLocation(dockLocation), houseMap(houseMap), houseName(houseName) {};
+    House(int totalDirt, int maxSteps, int maxBattery, int numRows, int numCols, Point position, Point dockLocation, std::vector<char> &houseMap, const std::string &houseName): 
+        totalDirt(totalDirt), 
+        maxSteps(maxSteps), 
+        maxBattery(maxBattery),
+        numRows(numRows), 
+        numCols(numCols), 
+        position(position), 
+        dockLocation(dockLocation), 
+        houseMap(houseMap), 
+        houseName(houseName) {}
+
+    House(const House& other) :
+        totalDirt(other.totalDirt),
+        maxSteps(other.maxSteps),
+        maxBattery(other.maxBattery),
+        numRows(other.numRows),
+        numCols(other.numCols),
+        position(other.position),
+        dockLocation(other.dockLocation),
+        houseMap(other.houseMap.size()), // Create a new vector with the same size as other.houseMap
+        houseName(other.houseName)
+    {
+        std::copy(other.houseMap.begin(), other.houseMap.end(), houseMap.begin()); // Copy the elements from other.houseMap to houseMap
+    }
 
     bool isWall(Direction d) {
         std::vector<Point> directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
@@ -66,6 +90,10 @@ public:
 
     int getMaxSteps() {
         return maxSteps;
+    }
+
+    int getMaxBattery() {
+        return maxBattery;
     }
 
     void handleMove(Step s) {

@@ -60,7 +60,7 @@ Step Algo_112710107::nextStep() {
         }
     }
 
-    if (currentPosition == origin && (unvisited.size() == 0 || (currentPath.size() / 2 > maxSteps - stepCount))) {
+    if (currentPosition == origin && (unvisited.size() == 0 || (currentPath.size() / 2 > maxSteps - stepCount) || maxSteps - stepCount < 2)) {
         // If so, return Finish
         return Step::Finish;
     }

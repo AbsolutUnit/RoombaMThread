@@ -20,6 +20,7 @@
 #include <filesystem>
 #include <thread>
 
+#include "../ThreadPool/ThreadPool.h"
 #include "../Common/House.h"
 #include "../Common/AbstractAlgorithm.h"
 #include "../Common/common_types.h"
@@ -31,35 +32,38 @@
 // You can use the below suggestion or alternatively implement concrete class for each sensor.
 class Simulator : public WallsSensor, public DirtSensor, public BatteryMeter {
 public:
-    std::size_t batteryState, maxBattery = 0;
-    std::string outputFile = "";
+    static thread_local AbstractAlgorithm *currAlgo;
+    static thread_local House *currHouse;
+    static thread_local std::size_t batteryState;
+    static thread_local float partialCharge;
+    static thread_local std::vector<char> movesTaken;
+    int threadCount = 10;
+    double chargingConstant = 20;
     bool displayFlag = true;
-    bool summaryOnly = false;
-    float partialCharge = 0;
-    std::vector<char> movesTaken;
+    bool summaryFlag = false;
     std::vector<House> houses;
-    std::vector<std::unique_ptr<AbstractAlgorithm>> algorithms;
     std::map<std::string, std::unique_ptr<AbstractAlgorithm>> nameToAlgorithm;
+    AlgorithmRegistrar registrar;
     std::vector<std::string> algorithmNames;
     std::vector<void*> algorithmHandlers;
-    std::unordered_map<std::string, int> scores;
-    AbstractAlgorithm *currAlgo;
-    House *currHouse;
+    std::vector<int> scores;
 // public:
-    Simulator(const std::string &housePath, const std::string &algoPath, bool display)
+    Simulator(const std::string &housePath, const std::string &algoPath, bool display, bool summary)
     {
         readHouses(housePath);
         loadAlgorithms(algoPath);
         displayFlag = display;
+        summaryFlag = summary;
+        scores = std::vector<int>(houses.size() * algorithmNames.size());
     };
 
     void run();
 
-    int runPair();
+    int runPair(std::string algoName);
 
     ~Simulator(){
-        for (auto&& algos : algorithms) {
-            algos.reset();
+        for (auto &algoName : algorithmNames) {
+            (nameToAlgorithm[algoName]).reset();
         }
         unloadAlgorithms();
     };
@@ -75,6 +79,8 @@ private:
 
     void setHouse(House &house) {
         currHouse = &house;
+        partialCharge = 0.0;
+        batteryState = currHouse->getMaxBattery();
     }
 
     bool isWall(Direction d) const override;
@@ -83,39 +89,25 @@ private:
 
     std::size_t getBatteryState() const override;
 
+    void readConfigFile(std::string &configPath);
+    
     void readHouses(const std::string &housePath);
-        // loop through folder and call readHouse on each file
-        // Remember to grab name since readHouseFile now takes in name
-        // Thats it
 
     House readHouseFile(const std::string &houseFilePath, const std::string &houseName);
 
     void loadAlgorithms(const std::string &algoPath);
 
-        // Loop through folder
-        // Dlopen each so file
-        // Handle errors if there
-        // Add algorithm name via pushback
-
-        // Recommendation: Make this a helper function
-        // THIS THIS THIS THIS
-        // For auto algo in AlgorithmRegistrar::getAlgorithmRegistrar()
-        // Get algo via algo.create()
-        // Pushback to vector of algorithms
-        // THIS THIS THIS THIS
-
-        // Dlclose each algo file
-        // Options are call per iteration of folder loop
-        // Or do loop for folder, loop for pushback algo, loop for folder again dlclosing
-        
-
     void unloadAlgorithms();
+
+    public: std::unique_ptr<AbstractAlgorithm> createAlgorithmByName(std::string name);
 
     int calculateScore(Status status);
 
     void displayMap(int iterations) const;
 
-    int generateOutputFile();
+    int generateOutputFile(std::string algoName);
 
     void generateSummary() const;
+
+    void clearCache();
 };
