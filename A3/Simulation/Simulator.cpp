@@ -320,7 +320,7 @@ int Simulator::generateOutputFile(std::string algoName) {
 
 void Simulator::generateSummary() const {
     // Open output file for summary.csv
-    std::cout << "Hitting generate summ " << std::endl;
+    // std::cout << "Hitting generate summ " << std::endl;
     std::ofstream output;
     output.open("summary.csv");
 
@@ -371,11 +371,11 @@ std::size_t Simulator::getBatteryState() const {
 }
 
 void Simulator::run() {
-    std::cout << "Thread count set as: " << threadCount << std::endl;
-    std::cout << "Charging rate denom set as: " << chargingConstant << std::endl;
+    // std::cout << "Thread count set as: " << threadCount << std::endl;
+    // std::cout << "Charging rate denom set as: " << chargingConstant << std::endl;
     // Initialize thread pool for values
     ThreadPool pool = ThreadPool(threadCount);
-    std::cout << "Running simulatons with " << threadCount << " threads";
+    std::cout << "Running simulatons with " << threadCount << " threads" << std::endl;
     // Loop througb algos
     for (int i = 0; i < algorithmNames.size(); ++i) {
         // And loop houses
@@ -401,13 +401,13 @@ void Simulator::run() {
                     std::cout << e.what() << '\n';
                 }
             });
-            std::cout << "Added task to queue" << std::endl;
+            // std::cout << "Added task to queue" << std::endl;
         }
     }
-    std::cout << "Added all to queue" << std::endl;
+    // std::cout << "Added all to queue" << std::endl;
     // Await all thread pool task completion
     pool.wait();
-    std::cout << "Awaited all" << std::endl;
+    // std::cout << "Awaited all" << std::endl;
     // Generate summary csv
     generateSummary();
 }
