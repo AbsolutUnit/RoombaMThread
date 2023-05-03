@@ -7,6 +7,7 @@
 class House {
 public:
     int totalDirt = 0;
+    int initialDirt = 0;
     int maxBattery = 0;
     std::size_t maxSteps = 0;
     int numRows, numCols = 0;
@@ -15,6 +16,7 @@ public:
     std::vector<char> houseMap;
     const std::string houseName;
 // public:
+    // Default constructor takes same arguments as in Simulator from A2
     House(int totalDirt, int maxSteps, int maxBattery, int numRows, int numCols, Point position, Point dockLocation, std::vector<char> &houseMap, const std::string &houseName): 
         totalDirt(totalDirt), 
         maxSteps(maxSteps), 
@@ -24,8 +26,11 @@ public:
         position(position), 
         dockLocation(dockLocation), 
         houseMap(houseMap), 
-        houseName(houseName) {}
+        houseName(houseName),
+        initialDirt(totalDirt) {}
 
+
+    // Implementation of copy c'tor
     House(const House& other) :
         totalDirt(other.totalDirt),
         maxSteps(other.maxSteps),
@@ -34,13 +39,15 @@ public:
         numCols(other.numCols),
         position(other.position),
         dockLocation(other.dockLocation),
-        houseMap(other.houseMap.size()), // Create a new vector with the same size as other.houseMap
-        houseName(other.houseName)
+        houseMap(other.houseMap.size()), // Create a new vector with the same size as other.houseMap -> deep copy
+        houseName(other.houseName),
+        initialDirt(totalDirt)
     {
         std::copy(other.houseMap.begin(), other.houseMap.end(), houseMap.begin()); // Copy the elements from other.houseMap to houseMap
     }
 
     bool isWall(Direction d) {
+        // Initialize directions
         std::vector<Point> directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
 
         // Calculate new position in the direction given using mapping
@@ -65,6 +72,7 @@ public:
     };
 
     int dirtLevel() {
+        // Convert to indexing for 1D representation
         int coordinate = convertToCoordinates(position);
 
         // Check for if the position has valid dirt level
@@ -94,6 +102,10 @@ public:
 
     int getMaxBattery() {
         return maxBattery;
+    }
+
+    int getInitialDirt() {
+        return initialDirt;
     }
 
     void handleMove(Step s) {

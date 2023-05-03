@@ -18,5 +18,6 @@ A3/houses
 A3/debug.sh
 A3/run.sh
 *.txt
+!bonus.txt
 *.csv
 vgcore.*

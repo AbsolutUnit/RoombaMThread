@@ -1,0 +1,9 @@
+We implmented all of the required parts for the graduate students, i.e. 
+- generating a summary.csv file, 
+- multithreading with a -num_threads=? flag, 
+- a feature that times out threads that take too long.
+- generating with flag -summary_only to prevent per pair txt output
+Along the above mentioned, we implemented a -display flag that displays the steps of the algorithm as it is running. This can be used for viewing the algorithms running.
+We also implemented a configuration file config.ini, where you can modify the charging constant as well as the default value for threads. 
+This default value for threads is the number of threads used if -num_threads is not included or used, and the charging constant is part of the charging equation:
+(the amount of battery steps when getting onto the docking station) + (number of steps staying on the docking station) * (“max battery steps” / (charging constant))
